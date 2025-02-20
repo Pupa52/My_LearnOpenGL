@@ -1,3 +1,6 @@
 {
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}"
+    },
     "cmake.outputLogEncoding": "utf8"
 }
