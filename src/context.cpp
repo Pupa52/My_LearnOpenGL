@@ -1,5 +1,6 @@
 #include "context.h"
 #include "image.h"
+#include <imgui.h>
 
 ContextUPtr Context::Create()
 {
@@ -61,8 +62,8 @@ bool Context::Init() {
         vertices, sizeof(float) * 120);
 
     // Set Attribute
-m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-m_vertexLayout->SetAttrib(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, sizeof(float) * 3);
+    m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+    m_vertexLayout->SetAttrib(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, sizeof(float) * 3);
 
     // Element Buffer Object
     m_indexBuffer = Buffer::CreateWithData(
@@ -110,7 +111,27 @@ m_vertexLayout->SetAttrib(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, sizeof(fl
 
 void Context::Render()
 {
-        std::vector<glm::vec3> cubePositions = {
+    if (ImGui::Begin("ui window"))
+    {
+        if (ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor)))
+        {
+            glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+        }
+        ImGui::Separator();
+        ImGui::DragFloat3("camera pos", glm::value_ptr(m_cameraPos), 0.01f);
+        ImGui::DragFloat("camera yaw", &m_cameraYaw, 0.5f);
+        ImGui::DragFloat("camera pitch", &m_cameraPitch, 0.5f, -89.0f, 89.0f);
+        ImGui::Separator();
+        if (ImGui::Button("reset camera"))
+        {
+            m_cameraYaw = 0.0f;
+            m_cameraPitch = 0.0f;
+            m_cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        }
+    }
+    ImGui::End();
+
+    std::vector<glm::vec3> cubePositions = {
         glm::vec3( 0.0f, 0.0f, 0.0f),
         glm::vec3( 2.0f, 5.0f, -15.0f),
         glm::vec3(-1.5f, -2.2f, -2.5f),
