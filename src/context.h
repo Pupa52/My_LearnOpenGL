@@ -49,7 +49,8 @@ private:
         glm::vec3 specular { glm::vec3(1.0f, 1.0f, 1.0f) };
     };
     Light m_light;
-  
+    bool m_flashLightMode { false };
+
     // material parameter
     struct Material {
         TextureUPtr diffuse;
